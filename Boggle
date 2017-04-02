@@ -1,0 +1,92 @@
+package string_practice;
+
+import java.util.Scanner;
+
+public class Boggle {
+	
+	static char [][]gameSet = new char[5][5];
+
+	static int dy[] = {-1, -1, -1, 0, 1, 1, 1, 0};
+	static int dx[] = {-1, 0, 1, 1, 1, 0, -1, -1};
+	
+	public static void main(String[] args){
+		Scanner sc = new Scanner(System.in);
+		//테스트케이스의 수
+		int C = sc.nextInt();
+		// 보글게임판 5x5
+		String game[] = new String[5];
+		for (int i = 0; i < 5; i++){
+			game[i] = sc.next();
+		}
+		for (int i = 0; i < 5; i++){
+			for (int j = 0; j < 5; j++){
+				gameSet[i][j] = game[i].charAt(j);
+			}
+		}		
+		// 찾을 단어 수 N		
+		int N = sc.nextInt();
+		String []test = new String[N];
+		//찾을 단어 입력
+		for (int k = 0; k < N; k++)
+			test[k] = sc.next();
+		sc.close();
+		boolean testRet[] = new boolean[N];
+		// 단어 하나씩 test시작
+		for (int k = 0; k < N; k++){
+			//x,y좌표별로 test
+			for (int i = 0; i < 5; i++){
+				for (int j = 0; j < 5; j++){
+					testRet[k] = hasWord(i,j,test[k]);
+					if (testRet[k] == true) break;
+				}
+				if (testRet[k] == true) break;
+			}
+		}
+		
+		//검사 결과 출력
+		for (int k = 0; k < N; k++){
+			System.out.print(test[k]+" ");
+			if (testRet[k] == true)
+				System.out.println("YES");
+			else 
+				System.out.println("NO");
+		}
+		//끝
+	}
+	static boolean hasWord(int y, int x, String word){
+		if (!inRange(y, x)) return false;
+		if (gameSet[y][x] != word.charAt(0))
+			return false;
+		if (word.length() == 1)
+			return true;
+		for (int direction = 0; direction < 8; direction++){
+			int nextY = y + dy[direction], nextX = x + dx[direction];
+			if(hasWord(nextY, nextX, word.substring(1)))
+				return true;
+		}
+		return false;
+	}
+	static boolean inRange(int y, int x){
+		if (y < 0 || x < 0 || x > 4 || y > 4)
+			return false;
+		return true;
+	}
+}
+
+
+/*
+ testcase
+1
+URLPM
+XPRET
+GIAET
+XTNZY
+XOQRS
+6
+PRETTY
+GIRL
+REPEAT
+KARA
+PANDORA
+GIAZAPX
+ */
